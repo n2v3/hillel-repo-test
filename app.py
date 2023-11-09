@@ -1,10 +1,10 @@
 from flask import Flask, jsonify, request
 from peewee import fn
 
-from db import Student, Mark
-from deserializators import deserialize_student_data, deserialize_mark_data
-from serializatiors import serialize_db_student, serialize_db_mark, serialize_db_student_with_marks
-from validators import validate_student_data, ValidationError, validate_mark_data
+from db import Student, Mark, Teacher
+from deserializators import deserialize_student_data, deserialize_mark_data, deserialize_teacher_data
+from serializatiors import serialize_db_student, serialize_db_mark, serialize_db_student_with_marks, serialize_db_teacher
+from validators import validate_student_data, ValidationError, validate_mark_data, validate_teacher_data
 
 app = Flask(__name__)
 
@@ -55,6 +55,39 @@ def student_api(student_id):
 
         return jsonify(serialize_db_student_with_marks(student))
 
+@app.route('/teachers', methods=["GET", "POST"])
+def teachers_api():
+    if request.method == "POST":
+        data = deserialize_teacher_data()
+        validate_teacher_data(data)
+        teacher = Teacher.create(**data)
+        
+        return jsonify(serialize_db_teacher(teacher)), 201
+    if request.method == "GET":
+        teachers = Teacher.select()
+        return jsonify([serialize_db_teacher(teacher) for teacher in teachers])
+
+@app.route('/teachers/<int:teacher_id>', methods = ["PATCH", "DELETE"])
+def teacher_api(teacher_id):
+    teacher = Teacher.get_or_none(id=teacher_id)
+    if request.method == "DELETE":
+        if not teacher:
+            return jsonify({"message": "teacher with this ID does not exist"}), 404
+        teacher.delete_instance()
+        return " ", 204
+
+    if request.method == "PATCH":
+        if not teacher:
+            return jsonify({"message": "Teacher with this ID does not exist"}), 404
+
+        data = deserialize_teacher_data()
+        validate_teacher_data(data)
+
+        Teacher.update(**data).where(Teacher.id == teacher_id).execute()
+        updated_teacher = Teacher.get(Teacher.id == teacher_id)
+        serialized_updated_teacher = serialize_db_teacher(updated_teacher)
+        return jsonify(serialized_updated_teacher), 200
+
 
 @app.route('/marks', methods=["GET", "POST"])
 def marks_api():
@@ -69,7 +102,7 @@ def marks_api():
 
         return jsonify(serialize_db_mark(mark)), 201
     if request.method == "GET":
-        marks = Mark.select(Mark, Student).join(Student)
+        marks = Mark.select(Mark, Student, Teacher).join(Student, on=(Mark.student == Student.id)).switch(Mark).join(Teacher, on=(Mark.teacher == Teacher.id))
 
         return jsonify([serialize_db_mark(mark) for mark in marks])
 
