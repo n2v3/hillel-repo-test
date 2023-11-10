@@ -23,25 +23,31 @@ def validate_student_data(data):
         raise ValidationError("name must not be empty")
 
 
-def validate_teacher_data(data):
+def validate_teacher_data(data, is_partial_update=False):
     name = data.get("name")
     subject = data.get("subject")
     rate = data.get("rate")
     work_experience_years = data.get("work_experience_years")
 
-    if not (name and subject and work_experience_years):
-        raise ValidationError("name, subject and work_experience_years are required")
-    if not isinstance(subject, str):
+    if not is_partial_update:
+        if not (name and subject and work_experience_years):
+            raise ValidationError("name, subject, and work_experience_years are required")
+
+    if subject is not None and not isinstance(subject, str):
         raise ValidationError("subject must be string")
-    if not isinstance(rate, int):
+
+    if rate is not None and not isinstance(rate, int):
         raise ValidationError("rate must be int")
-    if not isinstance(work_experience_years, int):
+
+    if work_experience_years is not None and not isinstance(work_experience_years, int):
         raise ValidationError("work_experience_years must be int")
 
-    if rate < 0:
+    if rate is not None and rate < 0:
         raise ValidationError("rate must be positive")
-    if work_experience_years < 0:
+
+    if work_experience_years is not None and work_experience_years < 0:
         raise ValidationError("work_experience_years must be positive")
+
     if subject == "":
         raise ValidationError("subject must not be empty")
 

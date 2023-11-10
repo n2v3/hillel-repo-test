@@ -81,12 +81,9 @@ def teacher_api(teacher_id):
             return jsonify({"message": "Teacher with this ID does not exist"}), 404
 
         data = deserialize_teacher_data()
-        validate_teacher_data(data)
-
-        Teacher.update(**data).where(Teacher.id == teacher_id).execute()
-        updated_teacher = Teacher.get(Teacher.id == teacher_id)
-        serialized_updated_teacher = serialize_db_teacher(updated_teacher)
-        return jsonify(serialized_updated_teacher), 200
+        validate_teacher_data(data, is_partial_update=True)
+        updated_teacher = Teacher.update(**data).where(Teacher.id == teacher_id).returning(Teacher).execute()[0]
+        return jsonify(serialize_db_teacher(updated_teacher)), 200
 
 
 @app.route('/marks', methods=["GET", "POST"])
