@@ -30,7 +30,7 @@ def validate_teacher_data(data):
     work_experience_years = data.get("work_experience_years")
 
     if not (name and subject and work_experience_years):
-        raise ValidationError("name, subject and work experience are required")
+        raise ValidationError("name, subject and work_experience_years are required")
     if not isinstance(subject, str):
         raise ValidationError("subject must be string")
     if not isinstance(rate, int):
