@@ -59,7 +59,7 @@ def student_api(student_id):
 def teachers_api():
     if request.method == "POST":
         data = deserialize_teacher_data()
-        validate_teacher_data(data)
+        validate_teacher_data(data, is_partial_update=False)
         teacher = Teacher.create(**data)
         
         return jsonify(serialize_db_teacher(teacher)), 201

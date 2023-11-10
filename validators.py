@@ -30,7 +30,7 @@ def validate_teacher_data(data, is_partial_update=False):
     work_experience_years = data.get("work_experience_years")
 
     if not is_partial_update:
-        if not (name and subject and work_experience_years):
+        if not all((name, subject, work_experience_years)):
             raise ValidationError("name, subject, and work_experience_years are required")
 
     if subject is not None and not isinstance(subject, str):
