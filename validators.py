@@ -27,21 +27,21 @@ def validate_teacher_data(data):
     name = data.get("name")
     subject = data.get("subject")
     rate = data.get("rate")
-    work_experience = data.get("work_experience")
+    work_experience_years = data.get("work_experience_years")
 
-    if not (name and subject and work_experience):
+    if not (name and subject and work_experience_years):
         raise ValidationError("name, subject and work experience are required")
     if not isinstance(subject, str):
         raise ValidationError("subject must be string")
     if not isinstance(rate, int):
         raise ValidationError("rate must be int")
-    if not isinstance(work_experience, int):
-        raise ValidationError("work experience must be int")
+    if not isinstance(work_experience_years, int):
+        raise ValidationError("work_experience_years must be int")
 
     if rate < 0:
         raise ValidationError("rate must be positive")
-    if work_experience < 0:
-        raise ValidationError("work experience must be positive")
+    if work_experience_years < 0:
+        raise ValidationError("work_experience_years must be positive")
     if subject == "":
         raise ValidationError("subject must not be empty")
 

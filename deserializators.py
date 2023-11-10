@@ -19,13 +19,13 @@ def deserialize_teacher_data():
     name = data.get("name")
     subject = data.get("subject")
     rate = data.get("rate")
-    work_experience = data.get("work_experience")
+    work_experience_years = data.get("work_experience_years")
 
     return {
         "name": name,
         "subject": subject,
         "rate": rate,
-        "work_experience": work_experience
+        "work_experience_years": work_experience_years
     }
 
 
