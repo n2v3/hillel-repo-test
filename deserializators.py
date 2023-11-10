@@ -1,5 +1,6 @@
 from flask import request
 
+
 def deserialize_student_data():
     data = request.get_json()
 
@@ -26,6 +27,7 @@ def deserialize_teacher_data():
         "rate": rate,
         "work_experience": work_experience
     }
+
 
 def deserialize_mark_data():
     data = request.get_json()

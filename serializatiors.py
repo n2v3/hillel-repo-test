@@ -14,7 +14,7 @@ def serialize_db_teacher(teacher: Teacher):
         "name": teacher.name,
         "subject": teacher.subject,
         "rate": teacher.rate,
-        "work_experience": teacher.work_experience
+        "work_experience": teacher.work_experience_years
     }
 
 

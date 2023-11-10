@@ -1,4 +1,4 @@
-from db import Student
+from db import Student, Teacher
 
 
 class ValidationError(Exception):
@@ -21,6 +21,7 @@ def validate_student_data(data):
         raise ValidationError("age must be positive")
     if name == "":
         raise ValidationError("name must not be empty")
+
 
 def validate_teacher_data(data):
     name = data.get("name")
@@ -51,6 +52,10 @@ def validate_mark_data(data):
     teacher_id = data.get("teacher_id")
 
     student = Student.get_or_none(id=student_id)
+    teacher = Teacher.get_or_none(id=teacher_id)
+
+    if not teacher:
+        raise ValidationError("teacher with such id does not exist")
 
     if not student:
         raise ValidationError("student with such id does not exist")

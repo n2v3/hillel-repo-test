@@ -23,7 +23,7 @@ class Teacher(BaseModel):
     name = CharField()
     subject = CharField()
     rate = IntegerField()
-    work_experience = IntegerField()
+    work_experience_years = IntegerField()
 
 
 class Mark(BaseModel):
